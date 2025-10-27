@@ -1,55 +1,39 @@
-pipeline {
+pipeline{
     agent any
 
-    triggers {
-        cron('H/1 * * * *')
-    }
-
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out the code...'
+    stages{
+        stage('Checkout'){
+            steps{
+                echo 'Checking out the code from anne-marie branch...'
                 checkout scm
             }
         }
-        stage('Build') {
-            steps {
-                echo 'Building...'
-            }
+        stage('Hello'){
+            steps{
+                echo 'Hello, World! from anne-marie branch.'
+            }       
         }
-        stage('Approval Stage') {
-            steps {
-                echo 'waiting for approval...'
+        stage('User Input'){
+            steps{
                 script {
-                    def userInput = input(                       
-                        message: "Do you want to proceed to deployment?",
-                        ok: "Yes, proceed",
-                        parameters: [
-                            string(name: 'DEPLOY_ENV', defaultValue: 'No info given', description: 'Enter the deployment notes')
-                        ]
-                    )
-                    echo "User input received: ${userInput}"
+                    input message: 'This is anne-marie branch. Do you want to continue?', 
+                    ok: 'Yes'
                 }
             }
         }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-            }
+        stage('Goodbye'){
+            steps{
+                echo 'Goodbye from anne-marie branch.'
+            }       
         }
     }
 
     post{
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
+        always {
+            echo 'This will always run after the pipeline completes.'
         }
     }
 }
-
 
 
 
